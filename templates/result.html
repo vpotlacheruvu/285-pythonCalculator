@@ -1,0 +1,28 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Your Profit Report</title>
+    <meta name="description" content="The HTML5 Herald"/>
+    <meta name="author" content="Varun"/>
+</head>
+
+<body>
+<h2>Profit Report:</h2>
+<div class="base">
+    <p>
+        Proceeds <br> &dollar;{{Proceeds}}<br><br>
+        Cost<br> &dollar;{{Cost}}<br><br>
+        Cost details:<br>
+        Total Purchase Price<br>
+        {{Allotment}} x &dollar;{{IniSharePrice}} = {{TotPurchasePrice}}<br>
+        Buy Commission = {{BuyComm}}<br>
+        Sell Commission = {{SellComm}}<br>
+        Tax on Capital Gain = {{SellComm}}% of &dollar;{{capGain}} --> {{TaxOnCapGain}}<br><br>
+        Net Profit <br> &dollar;{{NetProfit}}<br> <br>
+        Return on Investment<br> {{ROI}}%<br> <br>
+        To break even, you should have a final share price of <br> &dollar;{{ToBreakEven}}
+    </p>
+</div>
+</body>
+</html>
