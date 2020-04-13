@@ -33,13 +33,13 @@ class CalculatorView(TemplateView):
                 CostBasis = Allotment * IniSharePrice
                
                 TotCostBasis = CostBasis + Comm              
-                Gains = Proceeds - TotalCostBasis
+                Gains = Proceeds - TotCostBasis
                 GainsTax = Gains*(CapGainTaxRate/100)
                 
                 FinGains = Gains - GainsTax
                 FinCostBasis = CostBasis + Comm + GainsTax
                 
-                ROI = ((FinalGains - CostBasis)/CostBasis)*100
+                ROI = ((Proceeds - FinCostBasis)/FinCostBasis)*100
                 
                 BreakEvenPrice = TotCostBasis / 100
                  
@@ -47,7 +47,7 @@ class CalculatorView(TemplateView):
            
             args = {"form": form, 
                     "Proceeds": "{:,.2f}".format(Proceeds), 
-                    "Cost": "{:,.2f}".format(FinalCostBasis), 
+                    "Cost": "{:,.2f}".format(FinCostBasis), 
                     "TotPurchasePrice": "{:,.2f}".format(CostBasis),
                     "BuyComm": "{:,.2f}".format(BuyComm), 
                     "SellComm": "{:,.2f}".format(SellComm),
