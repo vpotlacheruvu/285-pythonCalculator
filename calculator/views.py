@@ -19,6 +19,7 @@ class CalculatorView(TemplateView):
         if request.method == 'POST':
             form = Calculator(request.POST)
             if form.is_valid():
+            
                 TickerSymbol = form.cleaned_data['TickerSymbol']
                 Allotment = form.cleaned_data['Allotment']
                 FinSharePrice = form.cleaned_data['FinSharePrice']
@@ -27,29 +28,36 @@ class CalculatorView(TemplateView):
                 BuyComm = form.cleaned_data['BuyComm']
                 CapGainTaxRate = form.cleaned_data['CapGainTaxRate']
 
-                # PROFIT REPORT:
+                Comm = BuyComm + SellComm
                 Proceeds = Allotment * FinSharePrice
-
-            capGain = ((FinSharePrice * Allotment) - SellComm) - \
-                      ((IniSharePrice * Allotment) + BuyComm)
-
-            Cost = (Allotment * IniSharePrice + (SellComm +
-                                                 BuyComm) + (CapGainTaxRate / 100) * capGain)
-
-            TotPurchasePrice = Allotment * IniSharePrice
-
-            TaxOnCapGain = (CapGainTaxRate / 100) * capGain
-
-            NetProfit = Proceeds - Cost
-
-            ROI = NetProfit / Cost * 100			
-
-            ToBreakEven = ((Allotment * IniSharePrice) +
-                           BuyComm + SellComm) / 100
-
-            args = {"form": form, "Proceeds": Proceeds, "Cost": Cost, "TotPurchasePrice": TotPurchasePrice,
-                    "BuyComm": BuyComm, "SellComm": SellComm,
-                    "TaxOnCapGain": TaxOnCapGain, "NetProfit": NetProfit, "ROI": ROI, "ToBreakEven": ToBreakEven,
-                    "Allotment": Allotment, "IniSharePrice": IniSharePrice, "FinSharePrice": FinSharePrice, "capGain": capGain,}
+                CostBasis = Allotment * IniSharePrice
+               
+                TotCostBasis = CostBasis + Comm              
+                Gains = Proceeds - TotalCostBasis
+                GainsTax = Gains*(CapGainTaxRate/100)
+                
+                FinGains = Gains - GainsTax
+                FinCostBasis = CostBasis + Comm + GainsTax
+                
+                ROI = ((FinalGains - CostBasis)/CostBasis)*100
+                
+                BreakEvenPrice = TotCostBasis / 100
+                 
+                # PROFIT REPORT:
+           
+            args = {"form": form, 
+                    "Proceeds": "{:,.2f}".format(Proceeds), 
+                    "Cost": "{:,.2f}".format(FinalCostBasis), 
+                    "TotPurchasePrice": "{:,.2f}".format(CostBasis),
+                    "BuyComm": "{:,.2f}".format(BuyComm), 
+                    "SellComm": "{:,.2f}".format(SellComm),
+                    "TaxOnCapGain": "{:,.2f}".format(GainsTax), 
+                    "NetProfit": "{:,.2f}".format(FinGains), 
+                    "ROI": "{:,.2f}".format(ROI),
+                    "ToBreakEven": "{:,.2f}".format(BreakEvenPrice),
+                    "Allotment": "{:,.0f}".format(Allotment), 
+                    "IniSharePrice": "{:,.0f}".format(IniSharePrice), 
+                    "FinSharePrice": "{:,.0f}".format(FinSharePrice), 
+                    "capGain": "{:,.2f}".format(Gains)}
 
         return render(request, "result.html", args)
